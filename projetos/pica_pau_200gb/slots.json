@@ -1,0 +1,62 @@
+[
+ {
+  "img": "uploads/bdd4584b-Hpl5MtwQgOVF9vJqlfui6SDB5Jl4oBSq.png",
+  "rect": [
+   300,
+   280,
+   418,
+   453
+  ],
+  "ini": 0.0,
+  "fim": 2.38,
+  "modo": "cor"
+ },
+ {
+  "img": "uploads/2f7d9f0c-image.png",
+  "rect": [
+   316,
+   261,
+   522,
+   520
+  ],
+  "ref": 4.6,
+  "ini": 4.1,
+  "fim": 5.75
+ },
+ {
+  "img": "uploads/29675b8c-39e532d5d5a31d9113c7fa8f3e4c332af9428613efe01037.png",
+  "rect": [
+   315,
+   261,
+   521,
+   520
+  ],
+  "ref": 6.2,
+  "ini": 5.4,
+  "fim": 7.18
+ },
+ {
+  "img": "uploads/3ef6a747-d851895118a16d07706b91e7b69b53ce27531269cad5e968.png",
+  "rect": [
+   313,
+   266,
+   535,
+   526
+  ],
+  "ref": 11.6,
+  "ini": 11.3,
+  "fim": 11.97
+ },
+ {
+  "img": "uploads/7c8a95fc-911449afb539e0c7c7d0e079b89673a4f05bf7bfce55dfcc.png",
+  "rect": [
+   295,
+   234,
+   554,
+   569
+  ],
+  "ref": 12.4,
+  "ini": 11.8,
+  "fim": 13.35
+ }
+]
