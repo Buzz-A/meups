@@ -1,0 +1,16 @@
+{
+  "nome": "MEUPS - video legenda",
+  "origem": "video_legenda.psd",
+  "canvas": { "largura": 1080, "altura": 1920, "formato": "9:16" },
+  "cores": { "azul_meups": "#005BD7", "branco": "#FFFFFF" },
+  "fonte": { "familia": "Novecento Sans Condensed", "peso": "UltraBold", "postscript": "Novecento-CondUltraBold" },
+  "camadas": [
+    { "id": "caixa_logo", "tipo": "imagem", "arquivo": "assets/caixa_logo.png", "x": 584, "y": 220, "w": 496, "h": 96, "obs": "caixa azul colada na borda direita, cantos esquerdos arredondados" },
+    { "id": "logo", "tipo": "imagem", "arquivo": "assets/logo_meuplaystation.png", "x": 620, "y": 242, "w": 380, "h": 52, "obs": "logo meuplaystation branco" },
+    { "id": "caixa_chapeu", "tipo": "imagem", "arquivo": "assets/caixa_chapeu.png", "x": 0, "y": 1221, "w": 243, "h": 82, "obs": "caixa branca colada na borda esquerda; largura deve acompanhar o texto" },
+    { "id": "chapeu", "tipo": "texto", "editavel": true, "exemplo": "CHAPÉU", "x": 80, "baseline": 1271.5, "tamanho": 40, "entrelinha": 45, "cor": "#005BD7", "caixa_alta": true },
+    { "id": "caixa_titulo", "tipo": "imagem", "arquivo": "assets/caixa_titulo.png", "x": 0, "y": 1285, "w": 852, "h": 185, "obs": "caixa azul colada na borda esquerda, cantos direitos arredondados; altura para 2 linhas" },
+    { "id": "titulo", "tipo": "texto", "editavel": true, "exemplo": "TÍTULO DO VÍDEO EM ATÉ DUAS LINHAS", "x": 80, "baseline_1a_linha": 1330, "largura_max": 736, "max_linhas": 2, "tamanho": 60, "entrelinha": 67, "cor": "#FFFFFF", "caixa_alta": true }
+  ],
+  "area_livre_video": "o vídeo ocupa a tela inteira por baixo; a 'Camada 1' do PSD está vazia (fundo transparente)"
+}
