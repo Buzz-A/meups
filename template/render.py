@@ -99,6 +99,10 @@ def main():
     ap.add_argument("--inicio", type=float, default=0)
     ap.add_argument("--fim", type=float)
     ap.add_argument("--crop", help="x:y:w:h da área útil do vídeo original")
+    ap.add_argument("--modo", choices=["preencher", "desfoque"], default="preencher",
+                    help="preencher: corta o vídeo para ocupar 9:16; desfoque: vídeo inteiro na largura "
+                         "com fundo desfocado (bom para vídeos quadrados/horizontais)")
+    ap.add_argument("--pos-y", type=int, help="modo desfoque: topo do vídeo (padrão: centralizado)")
     ap.add_argument("--musica", help="arquivo de áudio da trilha")
     ap.add_argument("--vol-musica", type=float, default=0.8)
     ap.add_argument("--vol-original", type=float, default=0.35)
@@ -118,6 +122,12 @@ def main():
         crop = ""
     # preenche 9:16 cortando o excesso, sem bordas pretas
     fundo = f"[0:v]{crop}scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},setsar=1,fps=30[bg]"
+    if a.modo == "desfoque":
+        y = a.pos_y if a.pos_y is not None else "(H-h)/2"
+        fundo = (f"[0:v]{crop}setsar=1,fps=30,split[s1][s2];"
+                 f"[s1]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
+                 f"boxblur=40:2,eq=brightness=-0.12[fb];"
+                 f"[s2]scale={W}:-2[fg];[fb][fg]overlay=0:{y}[bg]")
 
     # animações: logo entra pela direita, lower third pela esquerda (ease-out)
     ease = "(1-pow(1-min(max((t-{t0})/{d},0),1),3))"
