@@ -72,23 +72,25 @@ def gerar_overlays(lay, chapeu, titulo, fonte_path, pasta, credito=None):
     logo.save(os.path.join(pasta, "logo.png"))
 
     # --- lower third (chapéu + título), largura acompanha o texto ---
-    linhas = quebrar(titulo.upper(), f_tit, 736, 2)
+    linhas = quebrar(titulo.upper(), f_tit, 736, 3)  # PSD prevê 2; 3 linhas sobe o bloco
     larg_txt = max(f_tit.getlength(l) for l in linhas)
     larg_tit = int(80 + larg_txt + 36)
     larg_chap = int(80 + f_chap.getlength(chapeu.upper()) + 36)
 
-    y0 = 1221  # topo do chapéu no PSD
-    alt = 1470 - y0 if len(linhas) == 2 else 1470 - y0 - 67
+    # topo do chapéu no PSD = 1221 (2 linhas). Com 3 linhas o bloco sobe 67 px
+    # para não invadir a margem de segurança de baixo.
+    y0 = 1221 - 67 * max(0, len(linhas) - 2)
+    alt = (1470 - 1221) + 67 * (len(linhas) - 2)
     f_cred = fonte_para_altura_de_caixa_alta(fonte_path, 21)
     larg_cred = int(80 + f_cred.getlength(credito) + 20) if credito else 0
     alt_total = alt + (46 if credito else 0)
     lt = Image.new("RGBA", (max(larg_tit, larg_chap, larg_cred), alt_total), (0, 0, 0, 0))
     d = ImageDraw.Draw(lt)
-    caixa(d, (0, 0, larg_chap - 1, 1303 - y0 - 1), branco, 12, (False, True, False, False))
-    caixa(d, (0, 1285 - y0, larg_tit - 1, alt - 1), azul, 16, (False, True, True, False))
-    d.text((80, 1271 - y0), chapeu.upper(), font=f_chap, fill=azul, anchor="ls")
+    caixa(d, (0, 0, larg_chap - 1, 1303 - 1221 - 1), branco, 12, (False, True, False, False))
+    caixa(d, (0, 1285 - 1221, larg_tit - 1, alt - 1), azul, 16, (False, True, True, False))
+    d.text((80, 1271 - 1221), chapeu.upper(), font=f_chap, fill=azul, anchor="ls")
     for i, l in enumerate(linhas):
-        d.text((80, 1372 - y0 + i * 67), l, font=f_tit, fill=branco, anchor="ls")
+        d.text((80, 1372 - 1221 + i * 67), l, font=f_tit, fill=branco, anchor="ls")
     if credito:
         # crédito pequeno logo abaixo do título, dentro da margem de segurança (acima de y=1500)
         base = alt + 30
