@@ -41,6 +41,11 @@ def fonte_para_altura_de_caixa_alta(caminho, cap_px):
 
 
 def quebrar(texto, fonte, largura_max, max_linhas):
+    if "|" in texto:  # quebra manual: "LINHA 1|LINHA 2"
+        linhas = [l.strip() for l in texto.split("|")]
+        if len(linhas) > max_linhas:
+            raise SystemExit(f"Título passa de {max_linhas} linhas: {linhas}")
+        return linhas
     palavras = texto.split()
     linhas, atual = [], ""
     for p in palavras:
@@ -105,7 +110,7 @@ def main():
     ap.add_argument("entrada")
     ap.add_argument("saida")
     ap.add_argument("--chapeu", required=True)
-    ap.add_argument("--titulo", required=True)
+    ap.add_argument("--titulo", required=True, help='use "|" para forçar quebra de linha')
     ap.add_argument("--inicio", type=float, default=0)
     ap.add_argument("--fim", type=float)
     ap.add_argument("--crop", help="x:y:w:h da área útil do vídeo original")
