@@ -139,7 +139,7 @@ def main():
         cmd += ["-i", a.musica]
         fc.append(f"[0:a]volume={a.vol_original}[ao];[3:a]volume={a.vol_musica}[am];"
                   f"[ao][am]amix=inputs=2:duration=first:normalize=0,"
-                  f"afade=t=out:st={max((dur or 0) - 1.5, 0)}:d=1.5[a]")
+                  f"alimiter=limit=0.89,afade=t=out:st={max((dur or 0) - 1.5, 0)}:d=1.5[a]")
         amap = "[a]"
     else:
         amap = "0:a?"
