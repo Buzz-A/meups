@@ -1,0 +1,274 @@
+[
+ {
+  "ini": 0,
+  "fim": 0.4,
+  "texto": "Comprar",
+  "y": 651,
+  "grande": false,
+  "cobrir": 313
+ },
+ {
+  "ini": 0.36,
+  "fim": 1.16,
+  "texto": "*GTA 6*",
+  "y": 651,
+  "grande": true,
+  "cobrir": 448
+ },
+ {
+  "ini": 1.12,
+  "fim": 1.56,
+  "texto": "pode na real",
+  "y": 651,
+  "grande": false,
+  "cobrir": 421
+ },
+ {
+  "ini": 1.52,
+  "fim": 2.08,
+  "texto": "te *economizar*",
+  "y": 651,
+  "grande": false,
+  "cobrir": 394
+ },
+ {
+  "ini": 2.04,
+  "fim": 3.28,
+  "texto": "*US$ 5.000...*",
+  "y": 651,
+  "grande": true,
+  "cobrir": 583
+ },
+ {
+  "ini": 3.24,
+  "fim": 3.88,
+  "texto": "O jogo em si",
+  "y": 851,
+  "grande": false,
+  "cobrir": 637
+ },
+ {
+  "ini": 3.84,
+  "fim": 4.16,
+  "texto": "custa...",
+  "y": 851,
+  "grande": false,
+  "cobrir": 286
+ },
+ {
+  "ini": 4.12,
+  "fim": 6.08,
+  "texto": "*US$ 99,99*",
+  "y": 678,
+  "grande": true,
+  "cobrir": 502
+ },
+ {
+  "ini": 6.04,
+  "fim": 6.84,
+  "texto": "Se você levar",
+  "y": 992,
+  "grande": false,
+  "cobrir": 405
+ },
+ {
+  "ini": 6.8,
+  "fim": 7.52,
+  "texto": "*80 horas*",
+  "y": 981,
+  "grande": true,
+  "cobrir": 583
+ },
+ {
+  "ini": 7.48,
+  "fim": 8.04,
+  "texto": "pra zerar,",
+  "y": 997,
+  "grande": false,
+  "cobrir": 529
+ },
+ {
+  "ini": 8.0,
+  "fim": 9.56,
+  "texto": "dá...",
+  "y": 954,
+  "grande": false,
+  "cobrir": 340
+ },
+ {
+  "ini": 11.12,
+  "fim": 12.04,
+  "texto": "por hora de *diversão*.",
+  "y": 1127,
+  "grande": false,
+  "cobrir": 637
+ },
+ {
+  "ini": 12.0,
+  "fim": 12.8,
+  "texto": "Mas quando você *soma*",
+  "y": 754,
+  "grande": false,
+  "cobrir": 799
+ },
+ {
+  "ini": 12.76,
+  "fim": 13.6,
+  "texto": "as *missões secundárias*",
+  "y": 754,
+  "grande": false,
+  "cobrir": 556
+ },
+ {
+  "ini": 13.56,
+  "fim": 14.68,
+  "texto": "e *explora o mapa*,",
+  "y": 754,
+  "grande": false,
+  "cobrir": 853
+ },
+ {
+  "ini": 14.64,
+  "fim": 15.92,
+  "texto": "cai pra...",
+  "y": 862,
+  "grande": false,
+  "cobrir": 529
+ },
+ {
+  "ini": 15.88,
+  "fim": 17.2,
+  "texto": "*US$ 0,50* por hora",
+  "y": 846,
+  "grande": true,
+  "cobrir": 880
+ },
+ {
+  "ini": 17.16,
+  "fim": 17.76,
+  "texto": "Agora imagina que",
+  "y": 894,
+  "grande": false,
+  "cobrir": 556
+ },
+ {
+  "ini": 17.72,
+  "fim": 18.44,
+  "texto": "você *joga*",
+  "y": 894,
+  "grande": false,
+  "cobrir": 529
+ },
+ {
+  "ini": 18.4,
+  "fim": 19.0,
+  "texto": "*4 horas*",
+  "y": 878,
+  "grande": true,
+  "cobrir": 502
+ },
+ {
+  "ini": 18.96,
+  "fim": 19.88,
+  "texto": "toda noite.",
+  "y": 894,
+  "grande": false,
+  "cobrir": 610
+ },
+ {
+  "ini": 21.12,
+  "fim": 21.96,
+  "texto": "de *diversão* garantida.",
+  "y": 992,
+  "grande": false,
+  "cobrir": 707
+ },
+ {
+  "ini": 21.92,
+  "fim": 22.64,
+  "texto": "*Compara* isso",
+  "y": 851,
+  "grande": false,
+  "cobrir": 583
+ },
+ {
+  "ini": 22.6,
+  "fim": 23.32,
+  "texto": "com sair pro rolê,",
+  "y": 851,
+  "grande": false,
+  "cobrir": 529
+ },
+ {
+  "ini": 23.28,
+  "fim": 23.68,
+  "texto": "onde você pode",
+  "y": 851,
+  "grande": false,
+  "cobrir": 675
+ },
+ {
+  "ini": 23.64,
+  "fim": 24.32,
+  "texto": "*gastar fácil*",
+  "y": 851,
+  "grande": false,
+  "cobrir": 529
+ },
+ {
+  "ini": 24.28,
+  "fim": 25.16,
+  "texto": "*US$ 100*",
+  "y": 1002,
+  "grande": true,
+  "cobrir": 367
+ },
+ {
+  "ini": 25.12,
+  "fim": 26.04,
+  "texto": "numa noite só...",
+  "y": 1019,
+  "grande": false,
+  "cobrir": 691
+ },
+ {
+  "ini": 26.0,
+  "fim": 26.6,
+  "texto": "Por *isso*",
+  "y": 819,
+  "grande": false,
+  "cobrir": 459
+ },
+ {
+  "ini": 26.56,
+  "fim": 27.64,
+  "texto": "comprar *GTA 6*",
+  "y": 819,
+  "grande": false,
+  "cobrir": 567
+ },
+ {
+  "ini": 27.6,
+  "fim": 28.0,
+  "texto": "na real",
+  "y": 819,
+  "grande": false,
+  "cobrir": 367
+ },
+ {
+  "ini": 27.96,
+  "fim": 28.52,
+  "texto": "te *economiza*",
+  "y": 819,
+  "grande": false,
+  "cobrir": 421
+ },
+ {
+  "ini": 28.48,
+  "fim": 29.9,
+  "texto": "*US$ 5.000*",
+  "y": 1024,
+  "grande": true,
+  "cobrir": 475
+ }
+]

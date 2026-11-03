@@ -60,7 +60,7 @@ def caixa(draw, xy, cor, raio, cantos):
     draw.rounded_rectangle(xy, raio, fill=cor, corners=cantos)
 
 
-def gerar_overlays(lay, chapeu, titulo, fonte_path, pasta):
+def gerar_overlays(lay, chapeu, titulo, fonte_path, pasta, credito=None):
     azul = lay["cores"]["azul_meups"]
     branco = lay["cores"]["branco"]
     f_tit = fonte_para_altura_de_caixa_alta(fonte_path, 44)
@@ -79,13 +79,21 @@ def gerar_overlays(lay, chapeu, titulo, fonte_path, pasta):
 
     y0 = 1221  # topo do chapéu no PSD
     alt = 1470 - y0 if len(linhas) == 2 else 1470 - y0 - 67
-    lt = Image.new("RGBA", (max(larg_tit, larg_chap), alt), (0, 0, 0, 0))
+    f_cred = fonte_para_altura_de_caixa_alta(fonte_path, 21)
+    larg_cred = int(80 + f_cred.getlength(credito) + 20) if credito else 0
+    alt_total = alt + (46 if credito else 0)
+    lt = Image.new("RGBA", (max(larg_tit, larg_chap, larg_cred), alt_total), (0, 0, 0, 0))
     d = ImageDraw.Draw(lt)
     caixa(d, (0, 0, larg_chap - 1, 1303 - y0 - 1), branco, 12, (False, True, False, False))
     caixa(d, (0, 1285 - y0, larg_tit - 1, alt - 1), azul, 16, (False, True, True, False))
     d.text((80, 1271 - y0), chapeu.upper(), font=f_chap, fill=azul, anchor="ls")
     for i, l in enumerate(linhas):
         d.text((80, 1372 - y0 + i * 67), l, font=f_tit, fill=branco, anchor="ls")
+    if credito:
+        # crédito pequeno logo abaixo do título, dentro da margem de segurança (acima de y=1500)
+        base = alt + 30
+        d.text((82, base + 2), credito, font=f_cred, fill=(0, 0, 0, 160), anchor="ls")
+        d.text((80, base), credito, font=f_cred, fill=branco, anchor="ls")
     lt.save(os.path.join(pasta, "lower.png"))
     return lt.size, y0
 
@@ -103,6 +111,8 @@ def main():
                     help="preencher: corta o vídeo para ocupar 9:16; desfoque: vídeo inteiro na largura "
                          "com fundo desfocado (bom para vídeos quadrados/horizontais)")
     ap.add_argument("--pos-y", type=int, help="modo desfoque: topo do vídeo (padrão: centralizado)")
+    ap.add_argument("--legendas", help="JSON com as frases da legenda animada (ver legendas.py)")
+    ap.add_argument("--credito", help='texto pequeno de crédito, ex: "VÍDEO DE: @perfil (instagram)"')
     ap.add_argument("--musica", help="arquivo de áudio da trilha")
     ap.add_argument("--vol-musica", type=float, default=0.8)
     ap.add_argument("--vol-original", type=float, default=0.35)
@@ -112,19 +122,24 @@ def main():
 
     lay = carregar_layout()
     pasta = tempfile.mkdtemp()
-    (lw, lh), ly = gerar_overlays(lay, a.chapeu, a.titulo, a.fonte, pasta)
+    (lw, lh), ly = gerar_overlays(lay, a.chapeu, a.titulo, a.fonte, pasta, a.credito)
 
-    dur = (a.fim - a.inicio) if a.fim else None
+    if a.fim is None:
+        total = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                                      "-of", "csv=p=0", a.entrada], capture_output=True, text=True).stdout)
+        a.fim = total
+    dur = a.fim - a.inicio
+    fps = 30
     if a.crop:
         x, y, w, h = a.crop.split(":")
         crop = f"crop={w}:{h}:{x}:{y},"
     else:
         crop = ""
     # preenche 9:16 cortando o excesso, sem bordas pretas
-    fundo = f"[0:v]{crop}scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},setsar=1,fps=30[bg]"
+    fundo = f"[0:v]{crop}scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},setsar=1,fps={fps}[bg]"
     if a.modo == "desfoque":
         y = a.pos_y if a.pos_y is not None else "(H-h)/2"
-        fundo = (f"[0:v]{crop}setsar=1,fps=30,split[s1][s2];"
+        fundo = (f"[0:v]{crop}setsar=1,fps={fps},split[s1][s2];"
                  f"[s1]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
                  f"boxblur=40:2,eq=brightness=-0.12[fb];"
                  f"[s2]scale={W}:-2[fg];[fb][fg]overlay=0:{y}[bg]")
@@ -134,32 +149,55 @@ def main():
     x_logo = f"584+(496)*(1-{ease.format(t0=0.2, d=0.5)})"
     x_low = f"-{lw}+{lw}*{ease.format(t0=0.5, d=0.6)}"
 
+    if a.legendas:
+        fundo += ";[bg][LEG]overlay=0:0:shortest=1[bgl]"
+        base_v = "bgl"
+    else:
+        base_v = "bg"
     fc = [
         fundo,
-        f"[bg][1:v]overlay=x='{x_logo}':y=220:eval=frame:shortest=1[v1]",
+        f"[{base_v}][1:v]overlay=x='{x_logo}':y=220:eval=frame:shortest=1[v1]",
         f"[v1][2:v]overlay=x='{x_low}':y={ly}:eval=frame:shortest=1,format=yuv420p[v]",
     ]
     cmd = ["ffmpeg", "-y", "-ss", str(a.inicio)]
-    if dur:
-        cmd += ["-t", str(dur)]
+    cmd += ["-t", str(dur)]
     cmd += ["-i", a.entrada,
             "-loop", "1", "-i", os.path.join(pasta, "logo.png"),
             "-loop", "1", "-i", os.path.join(pasta, "lower.png")]
+    prox = 3
     if a.musica:
         cmd += ["-i", a.musica]
+        prox += 1
         fc.append(f"[0:a]volume={a.vol_original}[ao];[3:a]volume={a.vol_musica}[am];"
                   f"[ao][am]amix=inputs=2:duration=first:normalize=0,"
-                  f"alimiter=limit=0.89,afade=t=out:st={max((dur or 0) - 1.5, 0)}:d=1.5[a]")
+                  f"alimiter=limit=0.89,afade=t=out:st={max(dur - 1.5, 0)}:d=1.5[a]")
         amap = "[a]"
     else:
         amap = "0:a?"
+    proc_in = None
+    if a.legendas:
+        cmd += ["-f", "rawvideo", "-pix_fmt", "rgba", "-s", f"{W}x{H}", "-r", str(fps), "-i", "pipe:0"]
+        fc[0] = fc[0].replace("[LEG]", f"[{prox}:v]")
+        proc_in = subprocess.PIPE
     cmd += ["-filter_complex", ";".join(fc), "-map", "[v]", "-map", amap,
             "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p",
             "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart"]
-    if dur:
-        cmd += ["-t", str(dur)]
+    cmd += ["-t", str(dur)]
     cmd.append(a.saida)
-    subprocess.run(cmd, check=True)
+    if not a.legendas:
+        subprocess.run(cmd, check=True)
+        return
+    from legendas import gerar_frames
+    proc = subprocess.Popen(cmd, stdin=proc_in)
+    try:
+        for quadro in gerar_frames(a.legendas, a.fonte, lay["cores"]["azul_meups"], fps,
+                                   int(dur * fps) + fps):
+            proc.stdin.write(quadro)
+    except BrokenPipeError:
+        pass
+    proc.stdin.close()
+    if proc.wait() != 0:
+        raise SystemExit("ffmpeg falhou")
 
 
 if __name__ == "__main__":
