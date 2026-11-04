@@ -78,7 +78,7 @@ def main():
 
     capa = Image.new("RGB", (W, H), (13, 20, 29))
     # imagem ocupa o topo até y≈1480 (o degradê esconde a parte de baixo)
-    area_h = 1480
+    area_h = H  # imagem preenche a capa inteira; o degradê cobre só a parte de baixo
     img = Image.open(a.imagem).convert("RGB")
     s = max(W / img.width, area_h / img.height) * a.zoom
     img = img.resize((round(img.width * s), round(img.height * s)), Image.LANCZOS)
