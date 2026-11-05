@@ -1,0 +1,4 @@
+[
+ {"ini": 0.4, "fim": 25.5, "texto": "É OFICIALMENTE *O MÊS*...", "y": 470},
+ {"ini": 25.5, "fim": 30.6, "texto": "*19 DE NOVEMBRO*", "y": 470, "grande": true}
+]
