@@ -1,0 +1,15 @@
+[
+ {"ini": 0.3, "fim": 5.6, "texto": "19 DE NOVEMBRO...", "y": 470},
+ {"ini": 5.6, "fim": 9.2, "texto": "*GTA VI* LANÇOU", "y": 470, "grande": true},
+ {"ini": 9.25, "fim": 15.2, "texto": "FORTNITE: *SERVIDOR VAZIO*", "y": 470},
+ {"ini": 15.25, "fim": 21.2, "texto": "ROBLOX: *0 JOGANDO*", "y": 470},
+ {"ini": 21.25, "fim": 27.2, "texto": "WARZONE: *SEM SQUAD*", "y": 470},
+ {"ini": 27.25, "fim": 30.2, "texto": "R6 SIEGE: *FILA INFINITA*", "y": 470},
+ {"ini": 30.25, "fim": 33.7, "texto": "FORZA 5: *GARAGEM ABANDONADA*", "y": 470},
+ {"ini": 33.75, "fim": 39.2, "texto": "CS2: *NINGUÉM NA PARTIDA*", "y": 470},
+ {"ini": 39.25, "fim": 42.7, "texto": "EA FC: *ULTIMATE TEAM FALIU*", "y": 470},
+ {"ini": 42.75, "fim": 46.9, "texto": "RED DEAD 2: *NÃO HAVIA OUTRO JEITO*", "y": 470},
+ {"ini": 46.95, "fim": 49.2, "texto": "MINECRAFT: *NÃO TÔ ME SENTINDO BEM...*", "y": 470},
+ {"ini": 49.25, "fim": 58.2, "texto": "*EU NÃO QUERO IR, SR. ROCKSTAR...*", "y": 470},
+ {"ini": 58.25, "fim": 61.0, "texto": "SÓ SOBROU O *GTA VI*", "y": 470, "grande": true}
+]
