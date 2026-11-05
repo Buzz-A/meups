@@ -1,0 +1,5 @@
+[
+ {"ini": 0.3, "fim": 5.0, "texto": "*5 ESTRELAS* NO GTA VI", "y": 450},
+ {"ini": 5.0, "fim": 12.0, "texto": "AÍ COMEÇA *AQUELA MÚSICA* NA RÁDIO", "y": 450},
+ {"ini": 12.0, "fim": 25.5, "texto": "*MODO PILOTO ATIVADO*", "y": 450, "grande": true}
+]

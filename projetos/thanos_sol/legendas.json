@@ -1,0 +1,170 @@
+[
+{
+"ini": 0,
+"fim": 1,
+"texto": "LIBERA EM *00:00:22*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 1,
+"fim": 2,
+"texto": "LIBERA EM *00:00:21*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 2,
+"fim": 3,
+"texto": "LIBERA EM *00:00:20*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 3,
+"fim": 4,
+"texto": "LIBERA EM *00:00:19*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 4,
+"fim": 5,
+"texto": "LIBERA EM *00:00:18*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 5,
+"fim": 6,
+"texto": "LIBERA EM *00:00:17*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 6,
+"fim": 7,
+"texto": "LIBERA EM *00:00:16*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 7,
+"fim": 8,
+"texto": "LIBERA EM *00:00:15*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 8,
+"fim": 9,
+"texto": "LIBERA EM *00:00:14*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 9,
+"fim": 10,
+"texto": "LIBERA EM *00:00:13*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 10,
+"fim": 11,
+"texto": "LIBERA EM *00:00:12*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 11,
+"fim": 12,
+"texto": "LIBERA EM *00:00:11*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 12,
+"fim": 13,
+"texto": "LIBERA EM *00:00:10*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 13,
+"fim": 14,
+"texto": "LIBERA EM *00:00:09*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 14,
+"fim": 15,
+"texto": "LIBERA EM *00:00:08*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 15,
+"fim": 16,
+"texto": "LIBERA EM *00:00:07*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 16,
+"fim": 17,
+"texto": "LIBERA EM *00:00:06*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 17,
+"fim": 18,
+"texto": "LIBERA EM *00:00:05*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 18,
+"fim": 19,
+"texto": "LIBERA EM *00:00:04*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 19,
+"fim": 20,
+"texto": "LIBERA EM *00:00:03*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 20,
+"fim": 21,
+"texto": "LIBERA EM *00:00:02*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 21,
+"fim": 22,
+"texto": "LIBERA EM *00:00:01*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 22,
+"fim": 23,
+"texto": "LIBERA EM *00:00:00*",
+"y": 400,
+"grande": false
+},
+{
+"ini": 23,
+"fim": 26.0,
+"texto": "*GTA VI LIBERADO!*",
+"y": 400,
+"grande": true
+}
+]
