@@ -1,0 +1,6 @@
+[
+ {"ini": 0.3, "fim": 7.0, "texto": "FUGINDO DA POLÍCIA COM *3 ESTRELAS*...", "y": 470},
+ {"ini": 7.0, "fim": 18.8, "texto": "MAS PRIMEIRO... *PAGOU O PEDÁGIO*", "y": 470},
+ {"ini": 18.8, "fim": 23.0, "texto": "*AGORA SIM:* FUGA!", "y": 470, "grande": true},
+ {"ini": 23.0, "fim": 29.0, "texto": "CIDADÃO DE BEM *ATÉ NA FUGA*", "y": 470}
+]
