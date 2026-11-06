@@ -1,0 +1,7 @@
+[
+ {"ini": 0.2, "fim": 3.6, "texto": "VICE CITY *2002*", "y": 420},
+ {"ini": 3.6, "fim": 7.2, "texto": "SAN ANDREAS *2004*", "y": 420},
+ {"ini": 7.2, "fim": 10.6, "texto": "GTA IV *2008*", "y": 420},
+ {"ini": 10.6, "fim": 14.4, "texto": "GTA V *2013*", "y": 420},
+ {"ini": 14.4, "fim": 21.0, "texto": "GTA VI *2026*", "y": 420, "grande": true}
+]
