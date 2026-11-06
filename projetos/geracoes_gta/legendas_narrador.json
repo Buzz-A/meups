@@ -1,7 +1,33 @@
 [
- {"ini": 0.2, "fim": 5.0, "texto": "VICE CITY *2002*", "y": 420},
- {"ini": 5.0, "fim": 10.5, "texto": "SAN ANDREAS *2004*", "y": 420},
- {"ini": 10.5, "fim": 17.5, "texto": "GTA IV *2008*", "y": 420},
- {"ini": 17.5, "fim": 22.5, "texto": "GTA V *2013*", "y": 420},
- {"ini": 22.5, "fim": 31.2, "texto": "GTA VI *2026*", "y": 420, "grande": true}
+ {
+  "ini": 0.2,
+  "fim": 5.7,
+  "texto": "VICE CITY *2002*",
+  "y": 420
+ },
+ {
+  "ini": 5.7,
+  "fim": 13.47,
+  "texto": "SAN ANDREAS *2004*",
+  "y": 420
+ },
+ {
+  "ini": 13.47,
+  "fim": 20.47,
+  "texto": "GTA IV *2008*",
+  "y": 420
+ },
+ {
+  "ini": 20.47,
+  "fim": 26.93,
+  "texto": "GTA V *2013*",
+  "y": 420
+ },
+ {
+  "ini": 26.93,
+  "fim": 35.633333,
+  "texto": "GTA VI *2026*",
+  "y": 420,
+  "grande": true
+ }
 ]
