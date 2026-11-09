@@ -96,12 +96,16 @@ def gerar_overlays(lay, chapeu, titulo, fonte_path, pasta, credito=None):
     d.text((80, 1271 - 1221), chapeu.upper(), font=f_chap, fill=azul, anchor="ls")
     for i, l in enumerate(linhas):
         d.text((80, 1372 - 1221 + i * 67), l, font=f_tit, fill=branco, anchor="ls")
+    # crédito numa camada separada: pode ficar na tela depois que o título sai (--titulo-ate)
+    cred = Image.new("RGBA", lt.size, (0, 0, 0, 0))
     if credito:
         # crédito pequeno logo abaixo do título, dentro da margem de segurança (acima de y=1500)
+        dc = ImageDraw.Draw(cred)
         base = alt + 30
-        d.text((82, base + 2), credito, font=f_cred, fill=(0, 0, 0, 160), anchor="ls")
-        d.text((80, base), credito, font=f_cred, fill=branco, anchor="ls")
+        dc.text((82, base + 2), credito, font=f_cred, fill=(0, 0, 0, 160), anchor="ls")
+        dc.text((80, base), credito, font=f_cred, fill=branco, anchor="ls")
     lt.save(os.path.join(pasta, "lower.png"))
+    cred.save(os.path.join(pasta, "credito.png"))
     return lt.size, y0
 
 
@@ -125,6 +129,8 @@ def main():
     ap.add_argument("--vol-original", type=float, default=0.35)
     ap.add_argument("--fonte", default=os.path.join(AQUI, "fonts/BarlowCondensed-ExtraBold.ttf"),
                     help="use a Novecento-CondUltraBold.otf aqui quando tiver o arquivo")
+    ap.add_argument("--titulo-ate", type=float,
+                    help="segundos: depois disso chapéu + título saem pela esquerda; logo e crédito ficam")
     a = ap.parse_args()
 
     lay = carregar_layout()
@@ -155,6 +161,9 @@ def main():
     ease = "(1-pow(1-min(max((t-{t0})/{d},0),1),3))"
     x_logo = f"584+(496)*(1-{ease.format(t0=0.2, d=0.5)})"
     x_low = f"-{lw}+{lw}*{ease.format(t0=0.5, d=0.6)}"
+    x_cred = x_low
+    if a.titulo_ate:
+        x_low += f"-{lw}*{ease.format(t0=a.titulo_ate, d=0.5)}"
 
     if a.legendas:
         fundo += ";[bg][LEG]overlay=0:0:shortest=1[bgl]"
@@ -164,7 +173,8 @@ def main():
     fc = [
         fundo,
         f"[{base_v}][1:v]overlay=x='{x_logo}':y=220:eval=frame:shortest=1[v1]",
-        f"[v1][2:v]overlay=x='{x_low}':y={ly}:eval=frame:shortest=1,format=yuv420p[v]",
+        f"[v1][2:v]overlay=x='{x_low}':y={ly}:eval=frame:shortest=1[v2]",
+        f"[v2][CRED]overlay=x='{x_cred}':y={ly}:eval=frame:shortest=1,format=yuv420p[v]",
     ]
     cmd = ["ffmpeg", "-y", "-ss", str(a.inicio)]
     cmd += ["-t", str(dur)]
@@ -175,6 +185,10 @@ def main():
     if a.musica:
         cmd += ["-i", a.musica]
         prox += 1
+    cmd += ["-loop", "1", "-i", os.path.join(pasta, "credito.png")]
+    fc[-1] = fc[-1].replace("[CRED]", f"[{prox}:v]")
+    prox += 1
+    if a.musica:
         fc.append(f"[0:a]volume={a.vol_original}[ao];[3:a]volume={a.vol_musica}[am];"
                   f"[ao][am]amix=inputs=2:duration=first:normalize=0,"
                   f"alimiter=limit=0.89,afade=t=out:st={max(dur - 1.5, 0)}:d=1.5[a]")
