@@ -17,6 +17,9 @@ import os
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
+# Novecento (licenciada, fica só local em fonts/novecento/); se faltar, usa a Barlow.
+_NOV = os.path.join(AQUI, "fonts/novecento/Novecento CondUltraBold.ttf")
+FONTE_PADRAO = _NOV if os.path.exists(_NOV) else os.path.join(AQUI, "fonts/BarlowCondensed-ExtraBold.ttf")
 A = os.path.join(AQUI, "capa_assets")
 W, H = 1080, 1920
 FEED_TOPO, FEED_BASE = 285, 1635
@@ -72,7 +75,7 @@ def main():
     ap.add_argument("--desce", type=int, default=0,
                     help="desce a imagem N px (rostos no alto da foto ficam fora do corte do feed, y<285); "
                          "o espaço de cima é preenchido com a própria imagem desfocada")
-    ap.add_argument("--fonte", default=os.path.join(AQUI, "fonts/BarlowCondensed-ExtraBold.ttf"))
+    ap.add_argument("--fonte", default=FONTE_PADRAO)
     ap.add_argument("--fonte-light", default=os.path.join(AQUI, "fonts/BarlowCondensed-Light.ttf"))
     a = ap.parse_args()
 

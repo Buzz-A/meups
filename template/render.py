@@ -21,6 +21,9 @@ import tempfile
 from PIL import Image, ImageDraw, ImageFont
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
+# Novecento (licenciada, fica só local em fonts/novecento/); se faltar, usa a Barlow.
+_NOV = os.path.join(AQUI, "fonts/novecento/Novecento CondUltraBold.ttf")
+FONTE_PADRAO = _NOV if os.path.exists(_NOV) else os.path.join(AQUI, "fonts/BarlowCondensed-ExtraBold.ttf")
 W, H = 1080, 1920
 
 
@@ -123,7 +126,7 @@ def main():
     ap.add_argument("--musica", help="arquivo de áudio da trilha")
     ap.add_argument("--vol-musica", type=float, default=0.8)
     ap.add_argument("--vol-original", type=float, default=0.35)
-    ap.add_argument("--fonte", default=os.path.join(AQUI, "fonts/BarlowCondensed-ExtraBold.ttf"),
+    ap.add_argument("--fonte", default=FONTE_PADRAO,
                     help="use a Novecento-CondUltraBold.otf aqui quando tiver o arquivo")
     a = ap.parse_args()
 
