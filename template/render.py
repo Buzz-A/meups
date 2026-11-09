@@ -68,6 +68,9 @@ def caixa(draw, xy, cor, raio, cantos):
     draw.rounded_rectangle(xy, raio, fill=cor, corners=cantos)
 
 
+CREDITO_Y = 1450  # sem título: altura do crédito (dentro da margem de segurança)
+
+
 def gerar_overlays(lay, chapeu, titulo, fonte_path, pasta, credito=None):
     azul = lay["cores"]["azul_meups"]
     branco = lay["cores"]["branco"]
@@ -78,6 +81,18 @@ def gerar_overlays(lay, chapeu, titulo, fonte_path, pasta, credito=None):
     psd_overlay = Image.open(os.path.join(AQUI, "assets/layout_overlay_completo.png")).convert("RGBA")
     logo = psd_overlay.crop((584, 220, 1080, 316))
     logo.save(os.path.join(pasta, "logo.png"))
+
+    if not titulo.strip():
+        # sem título: só o crédito (se houver), no lugar do lower third
+        f_cred = fonte_para_altura_de_caixa_alta(fonte_path, 21)
+        larg = int(80 + f_cred.getlength(credito) + 20) if credito else 2
+        lt = Image.new("RGBA", (larg, 40), (0, 0, 0, 0))
+        if credito:
+            d = ImageDraw.Draw(lt)
+            d.text((82, 32), credito, font=f_cred, fill=(0, 0, 0, 160), anchor="ls")
+            d.text((80, 30), credito, font=f_cred, fill=branco, anchor="ls")
+        lt.save(os.path.join(pasta, "lower.png"))
+        return lt.size, CREDITO_Y
 
     # --- lower third (chapéu + título), largura acompanha o texto ---
     linhas = quebrar(titulo.upper(), f_tit, 736, 3)  # PSD prevê 2; 3 linhas sobe o bloco
@@ -112,8 +127,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("entrada")
     ap.add_argument("saida")
-    ap.add_argument("--chapeu", required=True)
-    ap.add_argument("--titulo", required=True, help='use "|" para forçar quebra de linha')
+    ap.add_argument("--chapeu", default="")
+    ap.add_argument("--titulo", required=True, help='use "|" para forçar quebra de linha; "" = sem título')
     ap.add_argument("--inicio", type=float, default=0)
     ap.add_argument("--fim", type=float)
     ap.add_argument("--crop", help="x:y:w:h da área útil do vídeo original")
@@ -122,6 +137,7 @@ def main():
                          "com fundo desfocado (bom para vídeos quadrados/horizontais)")
     ap.add_argument("--pos-y", type=int, help="modo desfoque: topo do vídeo (padrão: centralizado)")
     ap.add_argument("--legendas", help="JSON com as frases da legenda animada (ver legendas.py)")
+    ap.add_argument("--credito-y", type=int, help="sem título: altura do crédito")
     ap.add_argument("--credito", help='texto pequeno de crédito, ex: "VÍDEO DE: @perfil (instagram)"')
     ap.add_argument("--musica", help="arquivo de áudio da trilha")
     ap.add_argument("--vol-musica", type=float, default=0.8)
@@ -133,6 +149,8 @@ def main():
     lay = carregar_layout()
     pasta = tempfile.mkdtemp()
     (lw, lh), ly = gerar_overlays(lay, a.chapeu, a.titulo, a.fonte, pasta, a.credito)
+    if not a.titulo.strip() and a.credito_y:
+        ly = a.credito_y
 
     if a.fim is None:
         total = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
