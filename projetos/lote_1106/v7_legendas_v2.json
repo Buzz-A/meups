@@ -1,5 +1,3 @@
 [
- {"ini": 0.0, "fim": 14.4, "texto": "EU SAINDO DO TRABALHO", "y": 390},
- {"ini": 0.0, "fim": 14.4, "texto": "NO DIA 18 DE NOVEMBRO", "y": 490},
- {"ini": 0.0, "fim": 14.4, "texto": "MEU CHEFE: *\"ATÉ AMANHÃ!\"*", "y": 600}
+ {"ini": 0.0, "fim": 14.4, "texto": "EU SAINDO DO TRABALHO|NO DIA 18 DE NOVEMBRO|MEU CHEFE: *\"ATÉ AMANHÃ!\"*", "y": 500}
 ]

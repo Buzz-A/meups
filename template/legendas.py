@@ -24,23 +24,26 @@ def _tokens(texto):
 
 
 def render_legenda(frase, fonte_path, azul):
+    """Uma caixa azul; "|" no texto quebra em várias linhas centralizadas na mesma caixa."""
     tam = 92 if frase.get("grande") else 62
     f = ImageFont.truetype(fonte_path, tam)
-    toks = [(t.upper(), dest) for t, dest in _tokens(frase["texto"])]
-    larg_txt = sum(f.getlength(t) for t, _ in toks)
+    linhas = [[(t.upper(), dest) for t, dest in _tokens(l)] for l in frase["texto"].split("|")]
+    largs = [sum(f.getlength(t) for t, _ in toks) for toks in linhas]
     x0, y0, x1, y1 = f.getbbox("ÁG", anchor="ls")
     pad_x, pad_y = 44, 22
-    larg = int(max(larg_txt + 2 * pad_x, frase.get("cobrir", 0)))
-    alt = int((y1 - y0) + 2 * pad_y)
+    passo = int((y1 - y0) * 1.25)
+    larg = int(max(max(largs) + 2 * pad_x, frase.get("cobrir", 0)))
+    alt = int((y1 - y0) + passo * (len(linhas) - 1) + 2 * pad_y)
     im = Image.new("RGBA", (larg + 12, alt + 12), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     d.rounded_rectangle((6, 10, larg + 6, alt + 10), 22, fill=(0, 0, 0, 90))  # sombra
     d.rounded_rectangle((6, 6, larg + 6, alt + 6), 22, fill=azul)
-    x = 6 + (larg - larg_txt) / 2
-    base = 6 + pad_y - y0
-    for t, dest in toks:
-        d.text((x, base), t, font=f, fill=AMARELO if dest else BRANCO, anchor="ls")
-        x += f.getlength(t)
+    for i, (toks, lt) in enumerate(zip(linhas, largs)):
+        x = 6 + (larg - lt) / 2
+        base = 6 + pad_y - y0 + i * passo
+        for t, dest in toks:
+            d.text((x, base), t, font=f, fill=AMARELO if dest else BRANCO, anchor="ls")
+            x += f.getlength(t)
     return im
 
 
