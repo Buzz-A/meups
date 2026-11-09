@@ -74,6 +74,9 @@ def main():
                          "o espaço de cima é preenchido com a própria imagem desfocada")
     ap.add_argument("--fonte", default=os.path.join(AQUI, "fonts/BarlowCondensed-ExtraBold.ttf"))
     ap.add_argument("--fonte-light", default=os.path.join(AQUI, "fonts/BarlowCondensed-Light.ttf"))
+    ap.add_argument("--tracking", type=float, default=0,
+                    help="espaço extra entre letras do título em px (Novecento: -1.5 deixa igual ao PSD)")
+    ap.add_argument("--tam", type=int, help="tamanho exato da fonte do título (PSD: 100 com a Novecento)")
     a = ap.parse_args()
 
     capa = Image.new("RGB", (W, H), (13, 20, 29))
@@ -106,25 +109,37 @@ def main():
     d = ImageDraw.Draw(capa)
     # site com espaçamento largo, igual ao PSD (tracking 375)
     f_site = fonte_cap(a.fonte_light, 25)
+    site = "MEUPS.COM.BR"
+    larg_letras = sum(f_site.getlength(ch) for ch in site[:-1])
+    # espaçamento calculado para o texto ocupar x 80–365, como no PSD
+    esp = (365 - 80 - larg_letras - f_site.getlength(site[-1])) / (len(site) - 1)
     xx = 80
-    for ch in "MEUPS.COM.BR":
+    for ch in site:
         d.text((xx, 406), ch, font=f_site, fill=(255, 255, 255, 235), anchor="ls")
-        xx += f_site.getlength(ch) + f_site.size * 0.375
+        xx += f_site.getlength(ch) + esp
     icone = Image.open(os.path.join(A, "icone_meups.png")).convert("RGBA")
     capa.alpha_composite(icone, (918, 345))
 
     # título: centralizado entre as margens, última linha com base em y=1506
-    f = fonte_cap(a.fonte, 71)
+    f = ImageFont.truetype(a.fonte, a.tam) if a.tam else fonte_cap(a.fonte, 71)
     linhas = quebrar_equilibrado(a.titulo.upper(), f, W - 2 * MARGEM)
     while max(f.getlength(l) for l in linhas) > W - 2 * MARGEM or len(linhas) > 4:
         f = ImageFont.truetype(a.fonte, f.size - 4)  # título longo: reduz para caber no grid
         linhas = quebrar_equilibrado(a.titulo.upper(), f, W - 2 * MARGEM)
-    entrelinha = round(100 * f.size / fonte_cap(a.fonte, 71).size)
+    entrelinha = round(100 * f.size / (a.tam or fonte_cap(a.fonte, 71).size))
     base = 1506
     topo = base - entrelinha * (len(linhas) - 1) - 71
     assert topo > 460, "título alto demais: invade a imagem/logos"
     for i, l in enumerate(linhas):
-        d.text((W / 2, base - entrelinha * (len(linhas) - 1 - i)), l, font=f, fill="white", anchor="ms")
+        yb = base - entrelinha * (len(linhas) - 1 - i)
+        if a.tracking:
+            # desenha letra a letra com tracking (px), mantendo o kerning da fonte
+            larg = f.getlength(l) + a.tracking * (len(l) - 1)
+            x0 = W / 2 - larg / 2
+            for j, ch in enumerate(l):
+                d.text((x0 + f.getlength(l[:j]) + a.tracking * j, yb), ch, font=f, fill="white", anchor="ls")
+        else:
+            d.text((W / 2, yb), l, font=f, fill="white", anchor="ms")
     capa.convert("RGB").save(a.saida, quality=95)
     print(a.saida, linhas)
 
