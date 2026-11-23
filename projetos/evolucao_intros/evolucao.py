@@ -44,74 +44,103 @@ def fonte(path, cap_px):
 
 
 # ---------------------------------------------------------------- gráficos
-def tag_png(nome, ano, idx, total, f_bold, f_light, escala, destino):
-    """Caixa azul com o nome do jogo + caixa branca com o ano (estilo chapéu MEUPS)."""
-    fn = fonte(f_bold, int(64 * escala))
-    fa = fonte(f_bold, int(34 * escala))
-    fc = fonte(f_light, int(26 * escala))
-    pad = int(36 * escala)
-    h_nome = int(112 * escala)
-    h_ano = int(62 * escala)
-    contador = f"{idx:02d}/{total:02d}"
-    w_nome = int(pad * 2 + fn.getlength(nome))
-    w_ano = int(pad * 2 + fa.getlength(ano) + fc.getlength(contador) + pad)
-    W = max(w_nome, w_ano) + 10
-    H = h_ano + h_nome
-    im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+def _sombra(im, raio=10, forca=0.7, dy=4):
+    """Sombra preta suave atrás do conteúdo (mesmo tamanho do canvas)."""
+    s = Image.new("RGBA", im.size, (0, 0, 0, 0))
+    s.paste(Image.new("RGBA", im.size, (0, 0, 0, 255)), (0, dy), im.split()[3].point(lambda v: int(v * forca)))
+    s = s.filter(ImageFilter.GaussianBlur(raio))
+    s.alpha_composite(im)
+    return s
+
+
+def tag_png(nome, ano, idx, total, f_bold, f_light, escala, destino, largura):
+    """Cartela do jogo, centralizada e sem caixas (não confunde com o título do layout):
+    '—— 2001  ·  03/10 ——' em cima, nome grande branco com contorno e sublinhado azul."""
+    margem = int(70 * escala)
+    cap = int(72 * escala)
+    fn = fonte(f_bold, cap)
+    while fn.getlength(nome) > largura - 2 * margem and cap > 20:
+        cap -= 2
+        fn = fonte(f_bold, cap)
+    fa = fonte(f_bold, int(30 * escala))
+    fc = fonte(f_light, int(30 * escala))
+    H = int(cap * 1.6 + 110 * escala)
+    im = Image.new("RGBA", (largura, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
-    r = int(14 * escala)
-    d.rounded_rectangle((0, 0, w_ano - 1, h_ano - 1), r, fill=BRANCO, corners=(False, True, False, False))
-    d.text((pad, h_ano - int(17 * escala)), ano, font=fa, fill=AZUL, anchor="ls")
-    d.text((pad * 1.6 + fa.getlength(ano), h_ano - int(18 * escala)), contador, font=fc,
-           fill=(0, 91, 215, 170), anchor="ls")
-    d.rounded_rectangle((0, h_ano - r, w_nome - 1, H - 1), r, fill=AZUL, corners=(False, True, True, False))
-    d.text((pad, H - int(26 * escala)), nome, font=fn, fill=BRANCO, anchor="ls")
-    # sombra suave
-    sombra = Image.new("RGBA", (W + 40, H + 40), (0, 0, 0, 0))
-    a = im.split()[3].point(lambda v: int(v * 0.45))
-    sombra.paste(Image.new("RGBA", im.size, (0, 0, 0, 255)), (20, 26), a)
-    sombra = sombra.filter(ImageFilter.GaussianBlur(10))
-    sombra.alpha_composite(im, (20, 20))
-    sombra.save(destino)
-    return sombra.size
+    cx = largura // 2
+    # linha do ano
+    y_ano = int(42 * escala)
+    contador = f"  ·  {idx:02d}/{total:02d}"
+    w_ano = fa.getlength(ano) + fc.getlength(contador)
+    x0 = cx - w_ano / 2
+    d.text((x0, y_ano), ano, font=fa, fill=(120, 180, 255, 255), anchor="ls")
+    d.text((x0 + fa.getlength(ano), y_ano), contador, font=fc, fill=(255, 255, 255, 210), anchor="ls")
+    gap, comp = int(22 * escala), int(70 * escala)
+    yl = y_ano - int(11 * escala)
+    lw = max(2, int(3 * escala))
+    d.line((x0 - gap - comp, yl, x0 - gap, yl), fill=(255, 255, 255, 200), width=lw)
+    d.line((x0 + w_ano + gap, yl, x0 + w_ano + gap + comp, yl), fill=(255, 255, 255, 200), width=lw)
+    # nome do jogo com contorno escuro
+    y_nome = y_ano + int(22 * escala) + cap
+    d.text((cx, y_nome), nome, font=fn, fill=BRANCO, anchor="ms",
+           stroke_width=max(2, int(4 * escala)), stroke_fill=(0, 0, 0, 230))
+    # sublinhado azul de destaque
+    wb = int(min(fn.getlength(nome) * 0.35, 260 * escala))
+    yb = y_nome + int(20 * escala)
+    d.rounded_rectangle((cx - wb // 2, yb, cx + wb // 2, yb + int(8 * escala)), int(4 * escala), fill=AZUL)
+    im = _sombra(im, raio=int(12 * escala), forca=0.75)
+    im.save(destino)
+    return im.size
 
 
 def timeline_png(segs, atual, largura, f_bold, f_light, escala, destino):
-    """Linha do tempo com um ponto por jogo: passados cheios, atual azul grande."""
+    """Linha do tempo num painel escuro de destaque: trecho percorrido em azul,
+    jogo atual com anel brilhante e o ano numa pílula azul."""
     n = len(segs)
-    m = int(70 * escala)
-    H = int(118 * escala)
-    im = Image.new("RGBA", (largura, H), (0, 0, 0, 0))
+    margem = int(40 * escala)
+    Wp = largura - 2 * margem
+    Hp = int(150 * escala)
+    im = Image.new("RGBA", (largura, Hp + int(30 * escala)), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
+    r = int(26 * escala)
+    d.rounded_rectangle((margem, 0, margem + Wp, Hp), r, fill=(6, 10, 22, 190),
+                        outline=(255, 255, 255, 70), width=max(1, int(2 * escala)))
     fy = fonte(f_bold, int(20 * escala))
     fy_at = fonte(f_bold, int(26 * escala))
-    y = int(40 * escala)
+    y = int(56 * escala)
+    m = margem + int(60 * escala)
     xs = [m + (largura - 2 * m) * i / (n - 1) for i in range(n)]
-    lw = max(2, int(4 * escala))
-    d.line((xs[0], y, xs[-1], y), fill=(255, 255, 255, 90), width=lw)
-    d.line((xs[0], y, xs[atual], y), fill=(255, 255, 255, 235), width=lw)
+    lw = max(3, int(6 * escala))
+    d.line((xs[0], y, xs[-1], y), fill=(255, 255, 255, 70), width=lw)
+    d.line((xs[0], y, xs[atual], y), fill=AZUL, width=lw)
+    brilho = Image.new("RGBA", im.size, (0, 0, 0, 0))
+    db = ImageDraw.Draw(brilho)
     for i, (x, s) in enumerate(zip(xs, segs)):
         if i == atual:
-            R = int(19 * escala)
-            d.ellipse((x - R - 6 * escala, y - R - 6 * escala, x + R + 6 * escala, y + R + 6 * escala),
-                      fill=(255, 255, 255, 255))
+            R = int(22 * escala)
+            db.ellipse((x - R * 2, y - R * 2, x + R * 2, y + R * 2), fill=(40, 130, 255, 200))
+            d.ellipse((x - R - 5 * escala, y - R - 5 * escala, x + R + 5 * escala, y + R + 5 * escala), fill=BRANCO)
             d.ellipse((x - R, y - R, x + R, y + R), fill=AZUL)
-            d.text((x, y + int(64 * escala)), s["ano"], font=fy_at, fill=BRANCO, anchor="ms")
-        elif i < atual:
-            R = int(9 * escala)
-            d.ellipse((x - R, y - R, x + R, y + R), fill=BRANCO)
-            d.text((x, y + int(56 * escala)), s["ano"], font=fy, fill=(255, 255, 255, 200), anchor="ms")
+            tw = fy_at.getlength(s["ano"]) + int(28 * escala)
+            ty = y + int(42 * escala)
+            th = int(44 * escala)
+            d.rounded_rectangle((x - tw / 2, ty, x + tw / 2, ty + th), th // 2, fill=AZUL)
+            d.text((x, ty + th / 2), s["ano"], font=fy_at, fill=BRANCO, anchor="mm")
         else:
-            R = int(9 * escala)
-            d.ellipse((x - R, y - R, x + R, y + R), fill=(20, 20, 20, 200),
-                      outline=(255, 255, 255, 150), width=max(2, int(3 * escala)))
-            d.text((x, y + int(56 * escala)), s["ano"], font=fy, fill=(255, 255, 255, 120), anchor="ms")
-    # contorno escuro para ler sobre fundo claro
-    sombra = Image.new("RGBA", im.size, (0, 0, 0, 0))
-    sombra.paste(Image.new("RGBA", im.size, (0, 0, 0, 255)), (0, 0), im.split()[3].point(lambda v: int(v * 0.6)))
-    sombra = sombra.filter(ImageFilter.GaussianBlur(6))
-    sombra.alpha_composite(im)
-    sombra.save(destino)
+            R = int(10 * escala)
+            if i < atual:
+                d.ellipse((x - R, y - R, x + R, y + R), fill=BRANCO, outline=AZUL, width=max(2, int(3 * escala)))
+                cor = (255, 255, 255, 215)
+            else:
+                d.ellipse((x - R, y - R, x + R, y + R), fill=(30, 34, 46, 255),
+                          outline=(255, 255, 255, 150), width=max(2, int(3 * escala)))
+                cor = (255, 255, 255, 120)
+            d.text((x, y + int(66 * escala)), s["ano"], font=fy, fill=cor, anchor="ms")
+    brilho = brilho.filter(ImageFilter.GaussianBlur(int(14 * escala)))
+    brilho.alpha_composite(im)
+    im = _sombra(brilho, raio=int(16 * escala), forca=0.5, dy=int(6 * escala))
+    im.save(destino)
+    return im.size
 
 
 def gradiente_png(W, H, y0, destino, forca=200):
@@ -207,37 +236,42 @@ def duracao(p):
 EASE = "(1-pow(1-min(max((t-{t0})/{d},0),1),3))"
 
 
-def segmento_yt(norm, tag, tag_wh, tl, grad, logo, logo_wh, saida, dur, primeiro):
+ALFA = ("format=rgba,fade=t=in:st=0.3:d=0.45:alpha=1,"
+        "fade=t=out:st={fo}:d=0.4:alpha=1")
+SOBE = "{y}+24*(1-{e})"
+
+
+def segmento_yt(norm, tag, tag_wh, tl, tl_wh, grad, logo, logo_wh, saida, dur, primeiro):
     tw, th = tag_wh
-    x_in = EASE.format(t0=0.35, d=0.5)
-    x_out = EASE.format(t0=dur - 0.6, d=0.45)
-    x_tag = f"-{tw}+({tw}+40)*{x_in}-({tw}+60)*{x_out}"
-    y_tag = 1080 - 150 - th
+    y_tl = 1080 - tl_wh[1] - 12
+    y_tag = SOBE.format(y=y_tl - th + 6, e=EASE.format(t0=0.3, d=0.5))
     lw, lh = logo_wh
     x_logo = f"1920-{lw}+{lw}*(1-{EASE.format(t0=0.2, d=0.5)})" if primeiro else f"1920-{lw}"
     fc = (f"[0:v][1:v]overlay=0:0[a];"
-          f"[a][2:v]overlay=0:H-h-8:eval=frame[b];"
-          f"[b][3:v]overlay=x='{x_tag}':y={y_tag}:eval=frame[c];"
+          f"[a][2:v]overlay=0:{y_tl}[b];"
+          f"[3:v]{ALFA.format(fo=dur - 0.55)}[tg];"
+          f"[b][tg]overlay=x=0:y='{y_tag}':eval=frame[c];"
           f"[c][4:v]overlay=x='{x_logo}':y=40:eval=frame,format=yuv420p[v]")
     run(["ffmpeg", "-y", "-v", "error", "-i", norm, "-loop", "1", "-i", grad, "-loop", "1", "-i", tl,
-         "-loop", "1", "-i", tag, "-loop", "1", "-i", logo, "-filter_complex", fc,
+         "-loop", "1", "-framerate", str(FPS), "-i", tag, "-loop", "1", "-i", logo, "-filter_complex", fc,
          "-map", "[v]", "-map", "0:a", "-t", str(dur), "-c:v", "libx264", "-preset", "medium",
          "-crf", "18", "-r", str(FPS), "-c:a", "pcm_s16le", "-ar", "48000", saida])
 
 
-def segmento_vertical(norm, tag, tag_wh, tl, saida, dur):
+def segmento_vertical(norm, tag, tag_wh, tl, tl_wh, saida, dur):
     tw, th = tag_wh
-    x_in = EASE.format(t0=0.35, d=0.5)
-    x_out = EASE.format(t0=dur - 0.6, d=0.45)
-    x_tag = f"-{tw}+{tw}*{x_in}-({tw}+20)*{x_out}"
     TOP = 420  # vídeo 1080x608 entre o logo (até y316) e o título (y1221)
+    y_tag = SOBE.format(y=TOP + 608 + 6, e=EASE.format(t0=0.3, d=0.5))
+    y_tl = 1490  # painel logo abaixo do título (que vai até y1470) e dentro da área do feed (até 1635)
     fc = (f"[0:v]split[s1][s2];"
           f"[s1]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
           f"boxblur=40:2,eq=brightness=-0.15:saturation=1.1[fb];"
           f"[s2]scale=1080:-2[fg];[fb][fg]overlay=0:{TOP}[a];"
-          f"[a][1:v]overlay=x='{x_tag}':y={TOP + 608 + 20}:eval=frame[b];"
-          f"[b][2:v]overlay=0:1505,format=yuv420p[v]")
-    run(["ffmpeg", "-y", "-v", "error", "-i", norm, "-loop", "1", "-i", tag, "-loop", "1", "-i", tl,
+          f"[1:v]{ALFA.format(fo=dur - 0.55)}[tg];"
+          f"[a][tg]overlay=x=0:y='{y_tag}':eval=frame[b];"
+          f"[b][2:v]overlay=0:{y_tl},format=yuv420p[v]")
+    run(["ffmpeg", "-y", "-v", "error", "-i", norm, "-loop", "1", "-framerate", str(FPS), "-i", tag,
+         "-loop", "1", "-i", tl,
          "-filter_complex", fc, "-map", "[v]", "-map", "0:a", "-t", str(dur), "-c:v", "libx264",
          "-preset", "medium", "-crf", "18", "-r", str(FPS), "-c:a", "pcm_s16le",
          "-ar", "48000", saida])
@@ -319,15 +353,15 @@ def main():
             norm = normalizar(s, a.base, norm_out)
             dur = duracao(norm)
             tag = os.path.join(tmp, f"tag_yt{i:02d}.png")
-            twh = tag_png(s["nome"], s["ano"], i + 1, len(segs), a.fonte, a.fonte_light, 1.0, tag)
+            twh = tag_png(s["nome"], s["ano"], i + 1, len(segs), a.fonte, a.fonte_light, 1.0, tag, 1920)
             tl = os.path.join(tmp, f"tl_yt{i:02d}.png")
-            timeline_png(segs, i, 1920, a.fonte, a.fonte_light, 1.0, tl)
-            segmento_yt(norm, tag, twh, tl, grad, logo, logo_wh, yt_out, dur, i == 0)
+            tlwh = timeline_png(segs, i, 1920, a.fonte, a.fonte_light, 0.85, tl)
+            segmento_yt(norm, tag, twh, tl, tlwh, grad, logo, logo_wh, yt_out, dur, i == 0)
             tagv = os.path.join(tmp, f"tag_vt{i:02d}.png")
-            twhv = tag_png(s["nome"], s["ano"], i + 1, len(segs), a.fonte, a.fonte_light, 0.95, tagv)
+            twhv = tag_png(s["nome"], s["ano"], i + 1, len(segs), a.fonte, a.fonte_light, 0.9, tagv, 1080)
             tlv = os.path.join(tmp, f"tl_vt{i:02d}.png")
-            timeline_png(segs, i, 1080, a.fonte, a.fonte_light, 0.62, tlv)
-            segmento_vertical(norm, tagv, twhv, tlv, vt_out, dur)
+            tlwhv = timeline_png(segs, i, 1080, a.fonte, a.fonte_light, 0.72, tlv)
+            segmento_vertical(norm, tagv, twhv, tlv, tlwhv, vt_out, dur)
             if i == len(segs) - 1:
                 frame(norm, dur - 0.1, os.path.join(tmp, "ultimo.png"))
         yt_partes.append(yt_out)
