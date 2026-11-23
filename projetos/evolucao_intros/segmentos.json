@@ -1,0 +1,155 @@
+{
+ "abertura": [
+  "MEUPS APRESENTA",
+  "A EVOLUÇÃO DAS ABERTURAS",
+  "DE GTA, DO 1 AO VI"
+ ],
+ "final": [
+  "QUAL É A MELHOR ABERTURA?",
+  "COMENTA AÍ"
+ ],
+ "final_vertical": [
+  "QUAL É A MELHOR",
+  "ABERTURA?",
+  "COMENTA AÍ"
+ ],
+ "saida_yt": "gta_evolucao_aberturas_youtube.mp4",
+ "saida_vertical_sem_layout": "_gta_evolucao_aberturas_vertical_sem_layout.mp4",
+ "segmentos": [
+  {
+   "nome": "GRAND THEFT AUTO",
+   "ano": "1997",
+   "arquivo": "01_gta1.mp4",
+   "trechos": [
+    [
+     0,
+     16.5
+    ]
+   ]
+  },
+  {
+   "nome": "GTA 2",
+   "ano": "1999",
+   "arquivo": "02_gta2.mp4",
+   "trechos": [
+    [
+     0,
+     18
+    ],
+    [
+     1.6,
+     5.5,
+     "02b_gta2_title.mp4"
+    ]
+   ]
+  },
+  {
+   "nome": "GTA III",
+   "ano": "2001",
+   "arquivo": "03_gta3.mp4",
+   "trechos": [
+    [
+     3.5,
+     13.5
+    ],
+    [
+     25,
+     35
+    ]
+   ]
+  },
+  {
+   "nome": "GTA VICE CITY",
+   "ano": "2002",
+   "arquivo": "04_gta_vice_city.mp4",
+   "trechos": [
+    [
+     5,
+     19
+    ],
+    [
+     60,
+     64
+    ]
+   ]
+  },
+  {
+   "nome": "GTA SAN ANDREAS",
+   "ano": "2004",
+   "arquivo": "05_gta_san_andreas.mp4",
+   "trechos": [
+    [
+     1.5,
+     15.5
+    ],
+    [
+     26,
+     30.5
+    ]
+   ]
+  },
+  {
+   "nome": "GTA LIBERTY CITY STORIES",
+   "ano": "2005",
+   "arquivo": "06_gta_lcs.mp4",
+   "trechos": [
+    [
+     1.5,
+     17.5
+    ],
+    [
+     31,
+     39
+    ]
+   ]
+  },
+  {
+   "nome": "GTA VICE CITY STORIES",
+   "ano": "2006",
+   "arquivo": "07_gta_vcs.mp4",
+   "trechos": [
+    [
+     0,
+     10
+    ],
+    [
+     20,
+     24
+    ]
+   ]
+  },
+  {
+   "nome": "GTA IV",
+   "ano": "2008",
+   "arquivo": "08_gta4.mp4",
+   "trechos": [
+    [
+     1.5,
+     12
+    ]
+   ]
+  },
+  {
+   "nome": "GTA V",
+   "ano": "2013",
+   "arquivo": "09_gta5.mp4",
+   "trechos": [
+    [
+     0,
+     15.4
+    ]
+   ]
+  },
+  {
+   "nome": "GTA VI",
+   "ano": "2026",
+   "arquivo": "E:\\MEUPS\\RELA NO JACARE\\_comparacao_intro\\intro_rnj_sdr_full.mp4",
+   "trechos": [
+    [
+     0,
+     15.37
+    ]
+   ]
+  }
+ ]
+}
